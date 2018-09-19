@@ -1,0 +1,20 @@
+## >Fragment type,Fragment Id_start-stop,final_fragment_length,initial_fragment_length,Prediction_confidence_score
+## Contig,Start,Stop,Start_transformed,Stop_transformed,Strand,Type,Affiliations
+>Prophage,Ga0128599_10338_2-12299,12298,38543,1.0000
+Ga0128599_1033,2,349,0,347,-,CDS,ID=Ga0128599_10331;locus_tag=Ga0128599_10331;product=;pfam=NA;inoPC=NA;coat_pred=Signal
+Ga0128599_1033,395,934,393,932,-,CDS,ID=Ga0128599_10332;locus_tag=Ga0128599_10332;product=;pfam=DUF2857 78.2;inoPC=NA;coat_pred=NA
+Ga0128599_1033,949,2664,947,2662,-,CDS,ID=Ga0128599_10333;locus_tag=Ga0128599_10333;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033,2657,3511,2655,3509,-,CDS,ID=Ga0128599_10334;locus_tag=Ga0128599_10334;product=;pfam=AAA_31 76.1;inoPC=NA;coat_pred=NA
+Ga0128599_1033,3734,4069,3732,4067,+,CDS,ID=Ga0128599_10335;locus_tag=Ga0128599_10335;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033,4109,4705,4107,4703,+,CDS,ID=Ga0128599_10336;locus_tag=Ga0128599_10336;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033,5308,5748,5306,5746,-,CDS,ID=Ga0128599_10337;locus_tag=Ga0128599_10337;product=;pfam=DUF29 150.2;inoPC=PC_048 165.6;coat_pred=NA
+Ga0128599_1033,6259,7359,6257,7357,-,CDS,ID=Ga0128599_10338;locus_tag=Ga0128599_10338;product=;pfam=Zot 107.4;inoPC=PC_006 205.7;coat_pred=NA
+Ga0128599_1033,7366,7680,7364,7678,-,CDS,ID=Ga0128599_10339;locus_tag=Ga0128599_10339;product=;pfam=NA;inoPC=PC_027 91.1;coat_pred=Signal
+Ga0128599_1033,7952,8287,7950,8285,-,CDS,ID=Ga0128599_103310;locus_tag=Ga0128599_103310;product=;pfam=NA;inoPC=NA;coat_pred=Signal
+Ga0128599_1033,9150,9284,9148,9282,-,CDS,ID=Ga0128599_103311;locus_tag=Ga0128599_103311;product=;pfam=NA;inoPC=PC_043 48.5;coat_pred=Perfect
+Ga0128599_1033,9717,10772,9715,10770,-,CDS,ID=Ga0128599_103312;locus_tag=Ga0128599_103312;product=;pfam=Phage_CRI 48.6;inoPC=NA;coat_pred=NA
+Ga0128599_1033,10759,11052,10757,11050,-,CDS,ID=Ga0128599_103313;locus_tag=Ga0128599_103313;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033,11198,11377,11196,11375,-,CDS,ID=Ga0128599_103314;locus_tag=Ga0128599_103314;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033,11377,11682,11375,11680,-,CDS,ID=Ga0128599_103315;locus_tag=Ga0128599_103315;product=;pfam=Phage_DNA_bind 75.3;inoPC=PC_007 55.4;coat_pred=NA
+Ga0128599_1033,11688,11837,11686,11835,-,CDS,ID=Ga0128599_103316;locus_tag=Ga0128599_103316;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033,11991,12299,11989,12297,+,CDS,ID=Ga0128599_103317;locus_tag=Ga0128599_103317;product=;pfam=NA;inoPC=NA;coat_pred=NA
