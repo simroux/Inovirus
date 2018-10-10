@@ -22,7 +22,7 @@ wget ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz
 gunzip Pfam-A.hmm.gz
 ```
 
-## Step 1: De novo identification of putative inovirus genomes in a contig set - input: (meta)genome contig(s) in genbank format
+## Step 1: De novo identification of putative inovirus sequences in a contig set - input: (meta)genome contig(s) in genbank format
 ### Input example: 
 Example_files/2731957639/2731957639_129103.assembled.gbk
 ```
@@ -52,7 +52,7 @@ export PERL5LIB=$OLD_PERL5LIB
 ### Note:
 This custom annotation uses tmhmm and signalp to identify putative inovirus coat proteins. The same can be done on individual protein fasta file using the stand-along script "Predict_inovirus_coat_proteins.pl"
 
-## Step 2: extract the corresponding annotation - input: gff annotation of putative fragments, either from step 1 or from a custom annotation pipeline. 
+## Step 2: Refine inovirus genome prediction - input: gff annotation of putative fragments, either from step 1 or from a custom annotation pipeline. 
 ### Example input files: 
 Example_files/2731957639_expected_results/2732535622_129103.assembled_frag_Ga0128599_102362_annot.gff & Example_files/2731957639_expected_results/2732535622_129103.assembled_frag_Ga0128599_102362_nucl.fna (output from step 1)
 For candidate fragment 1
