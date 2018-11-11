@@ -185,7 +185,7 @@ foreach my $frag (sort keys %check_frag){
 		if (defined($check_frag{$tab_genes[$i]})){$n_ini=$i;}
 # 		print "Checking $tab_genes[$i]\n";
 	}
-	my $start_i=-1;
+	my $start_i=0;
 	my $end_i=$#tab_genes;
 	open my $s1,">",$tmp_input;
 	print $s1 "Id,Type,Length,N_genes,N_morph,N_pfam_coat,N_pred_coat,N_ino_pcs,N_unpfam,R_unpfam,L10,L50\n";
