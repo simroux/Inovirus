@@ -461,22 +461,16 @@ foreach my $frag (sort keys %info_frag){
 			my $return=&parse_blast($out_tmp,$th_len,$start_e,$stop_e,$start_f,$seq_c,$start,$end,\%required);
 			print "Return - $return\n";
 			if ($return ne ""){
-				my @t=sort {$$return{$b}{"id"} <=> $$return{$a}{"id"} | $$return{$b}{"length"} <=> $$return{$a}{"length"}} keys %{$return};
-				print "LOOKING AT TRNA RETURNS\n";
-				if (!defined($store_att{$frag}{"tRNA"}) || ($store_att{$frag}{"tRNA"}{"id"}<$$return{$t[0]}{"id"})){
-					print "first one\n";
-					print $$return{$t[0]}{"pot_start"}." - ".$$return{$t[0]}{"pot_end"}." - ".$$return{$t[0]}{"length"}."\n";
-					$store_att{$frag}{"tRNA"}{"start"}=$$return{$t[0]}{"pot_start"};
-					$store_att{$frag}{"tRNA"}{"end"}=$$return{$t[0]}{"pot_end"};
-					$store_att{$frag}{"tRNA"}{"length"}=$$return{$t[0]}{"dr_length"};
-					$store_att{$frag}{"tRNA"}{"id"}=$$return{$t[0]}{"id"};
-				}
-				elsif($store_att{$frag}{"tRNA"}{"id"}==$$return{$t[0]}{"id"} && $$return{$t[0]}{"length"} >$store_att{$frag}{"tRNA"}{"length"}){
-					print "better one\n";
-					$store_att{$frag}{"tRNA"}{"start"}=$$return{$t[0]}{"pot_start"};
-					$store_att{$frag}{"tRNA"}{"end"}=$$return{$t[0]}{"pot_end"};
-					$store_att{$frag}{"tRNA"}{"length"}=$$return{$t[0]}{"dr_length"};
-					$store_att{$frag}{"tRNA"}{"id"}=$$return{$t[0]}{"id"};
+				my @t=sort {$$return{$b}{"id"} <=> $$return{$a}{"id"} || $$return{$b}{"length"} <=> $$return{$a}{"length"}} keys %{$return};
+				print "LOOKING AT tRNA RETURNS\n";
+				foreach my $hit (@t){
+					if (!defined($store_att{$frag}{"tRNA"}) || ($store_att{$frag}{"tRNA"}{"id"}<$$return{$hit}{"id"}) || ($store_att{$frag}{"tRNA"}{"id"}==$$return{$hit}{"id"} && $$return{$hit}{"dr_length"} >$store_att{$frag}{"tRNA"}{"length"})){
+						print "Att site in a tRNA - $hit - $$return{$hit}{pot_start}\n";
+						$store_att{$frag}{"tRNA"}{"start"}=$$return{$hit}{"pot_start"};
+						$store_att{$frag}{"tRNA"}{"end"}=$$return{$hit}{"pot_end"};
+						$store_att{$frag}{"tRNA"}{"length"}=$$return{$hit}{"dr_length"};
+						$store_att{$frag}{"tRNA"}{"id"}=$$return{$hit}{"id"};
+					}
 				}
 			}
 		}
@@ -519,19 +513,16 @@ foreach my $frag (sort keys %info_frag){
 			# We want hits with at least 90% ANI and an att site of 20bp
 			my $return=&parse_blast($out_tmp,$th_len,$start_e,$stop_e,$start_f,$seq_c,$start,$end,\%required);
 			if ($return ne ""){
-				my @t=sort {$$return{$b}{"id"} <=> $$return{$a}{"id"} | $$return{$b}{"length"} <=> $$return{$a}{"length"}} keys %{$return};
-				if (!defined($store_att{$frag}{"Integrase"}) || ($store_att{$frag}{"Integrase"}{"id"}<$$return{$t[0]}{"id"})){
-					print "Att site with an integrase - $t[0] - $$return{$t[0]}{pot_start}\n";
-					$store_att{$frag}{"Integrase"}{"start"}=$$return{$t[0]}{"pot_start"};
-					$store_att{$frag}{"Integrase"}{"end"}=$$return{$t[0]}{"pot_end"};
-					$store_att{$frag}{"Integrase"}{"length"}=$$return{$t[0]}{"dr_length"};
-					$store_att{$frag}{"Integrase"}{"id"}=$$return{$t[0]}{"id"};
-				}
-				elsif($store_att{$frag}{"Integrase"}{"id"}==$$return{$t[0]}{"id"} && $$return{$t[0]}{"dr_length"} >$store_att{$frag}{"Integrase"}{"length"}){
-					$store_att{$frag}{"Integrase"}{"start"}=$$return{$t[0]}{"pot_start"};
-					$store_att{$frag}{"Integrase"}{"end"}=$$return{$t[0]}{"pot_end"};
-					$store_att{$frag}{"Integrase"}{"length"}=$$return{$t[0]}{"dr_length"};
-					$store_att{$frag}{"Integrase"}{"id"}=$$return{$t[0]}{"id"};
+				my @t=sort {$$return{$b}{"id"} <=> $$return{$a}{"id"} || $$return{$b}{"length"} <=> $$return{$a}{"length"}} keys %{$return};
+				foreach my $hit (@t){
+					if (!defined($store_att{$frag}{"Integrase"}) || ($store_att{$frag}{"Integrase"}{"id"}<$$return{$hit}{"id"}) || ($store_att{$frag}{"Integrase"}{"id"}==$$return{$hit}{"id"} && $$return{$hit}{"dr_length"} >$store_att{$frag}{"Integrase"}{"length"})){
+						print "Att site with an integrase - $hit - $$return{$hit}{pot_start}\n";
+						print "ID Is ".$$return{$hit}{"id"}."\n";
+						$store_att{$frag}{"Integrase"}{"start"}=$$return{$hit}{"pot_start"};
+						$store_att{$frag}{"Integrase"}{"end"}=$$return{$hit}{"pot_end"};
+						$store_att{$frag}{"Integrase"}{"length"}=$$return{$hit}{"dr_length"};
+						$store_att{$frag}{"Integrase"}{"id"}=$$return{$hit}{"id"};
+					}
 				}
 			}
 		}
@@ -644,7 +635,7 @@ foreach my $frag (sort keys %info_frag){
 				print "##### New type $type\n";
 				my $frag_length=$new_end-$new_start;
 				print $frag." ".$start."-".$end." ".$frag_length." ".$check_frag{$frag}{"contig_length"}." -- ".$type."\n";
-				print $s_out ">".$type.",".$frag."_".$new_start."-".$new_end.",".$frag_length.",".$check_frag{$frag}{"contig_length"}.",".$info_frag{$frag}{"confidence_score"}.",".$hit_length.",".$hit_id."\n";
+				print $s_out ">".$type.",".$frag."_".$new_start."-".$new_end.",".$frag_length.",".$check_frag{$frag}{"contig_length"}.",".$info_frag{$frag}{"confidence_score"}.",".$hit_id.",".$hit_length."\n";
 				for (my $i=0;$i<=$#tab_genes;$i++){
 					my $gene=$tab_genes[$i];
 					if ($store_gene{$frag}{$gene}{"start"}>=$new_start && $store_gene{$frag}{$gene}{"start"}<=$new_end && $store_gene{$frag}{$gene}{"stop"}>=$new_start && $store_gene{$frag}{$gene}{"stop"}<=$new_end){
