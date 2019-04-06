@@ -9,7 +9,8 @@ conda install -n inovirus_detector -c r r-randomforest
 ```
 * SignalP and TMHMM, not available through conda.
 Download and install SignalP according to instructions from the SignalP v4.1 authors (http://www.cbs.dtu.dk/services/doc/signalp-4.1.readme)
-Download and install Tmhmm according to instructions from the Tmhmm v2.0 authors (http://www.cbs.dtu.dk/services/doc/tmhmm-2.0c.readme)
+Download and install Tmhmm according to instructions from the Tmhmm v2.0 authors (http://www.cbs.dtu.dk/services/doc/tmhmm-2.0c.readme). 
+Note: Depending on your system, you may have to adjust the perl path in Tmhmm (see https://github.com/simroux/Inovirus/issues/1)
 
 * Extract the Inovirus_db.tar.gz archive
 ```
