@@ -9,7 +9,8 @@ my $out='';
 my $path_signalp='';
 my $path_tmhmm='';
 my $fa_file='';
-GetOptions ('help' => \$h, 'h' => \$h, 'f=s'=>\$fa_file, 'sp=s'=>\$path_signalp, 'th=s'=>\$path_tmhmm);
+my $wdir='./';
+GetOptions ('help' => \$h, 'h' => \$h, 'f=s'=>\$fa_file, 'sp=s'=>\$path_signalp, 'th=s'=>\$path_tmhmm, 'w=s'=>\$wdir);
 if ($h==1 || $fa_file eq ""  || $path_tmhmm eq "" || $path_signalp eq ""){ # If asked for help or did not set up any argument
 	print "# Script to predict putative inovirus coat proteins
 #### Arguments : 
@@ -24,7 +25,11 @@ if ($h==1 || $fa_file eq ""  || $path_tmhmm eq "" || $path_signalp eq ""){ # If 
 	die "\n";
 }
 
-if (!(-d "TmpdirTMHMM")){`mkdir TmpdirTMHMM`;}
+
+if (!($wdir=~/\/$/)){$wdir.="/";}
+
+my $tmp_dir_tmhmm=$wdir."TmpdirTMHMM";
+if (!(-d $tmp_dir_tmhmm)){`mkdir $tmp_dir_tmhmm`;}
 my $out_file=$fa_file."_inovirus_coat_prediction.csv";
 
 open my $fa,"<",$fa_file;
@@ -37,7 +42,7 @@ close $fa;
 
 
 print "Run Tmhmm on native proteins\n";
-my $tmhmm="out_tmp_tmhmm.txt";
+my $tmhmm=$wdir."out_tmp_tmhmm.txt";
 &run_tmhmm($fa_file,$tmhmm);
 my $c_c="";
 my %info;
@@ -60,11 +65,11 @@ while(<$txt>){
 close $txt;
 
 print "Generating matured proteins\n";
-my $tmp_matured="Tmpmatured.faa";
-my $result_gp="out_tmp_signalp_gramp";
-my $matured_gp="Tmpmatured_gp.faa";
-my $result_gn="out_tmp_signalp_gramn";
-my $matured_gn="Tmpmatured_gn.faa";
+my $tmp_matured=$wdir."Tmpmatured.faa";
+my $result_gp=$wdir."out_tmp_signalp_gramp";
+my $matured_gp=$wdir."Tmpmatured_gp.faa";
+my $result_gn=$wdir."out_tmp_signalp_gramn";
+my $matured_gn=$wdir."Tmpmatured_gn.faa";
 print "Running SignalP with gram+ model\n";
 &run_signalp($fa_file,"gram+",$result_gp,$matured_gp);
 my %store_signal;
@@ -150,7 +155,7 @@ close $fa;
 close $s1;
 
 print "run TMHMM on matured proteins\n";
-my $tmhmm_2="out_tmp_tmhmm_matured.txt";
+my $tmhmm_2=$wdir."out_tmp_tmhmm_matured.txt";
 &run_tmhmm($tmp_matured,$tmhmm_2);
 my %info_2;
 open my $txt,"<",$tmhmm_2;
@@ -197,8 +202,8 @@ foreach my $gene (@tab_genes){
 }
 close $final_out;
 
-print "### Cleaning up \n";
-&run_cmd("rm $tmhmm $tmhmm_2 $tmp_matured $result_gp $matured_gp $result_gn $matured_gn");
+# print "### Cleaning up \n";
+# &run_cmd("rm $tmhmm $tmhmm_2 $tmp_matured $result_gp $matured_gp $result_gn $matured_gn");
 
 
 
@@ -206,7 +211,7 @@ print "### Cleaning up \n";
 sub run_tmhmm{
 	my $in_file=$_[0];
 	my $out_file=$_[1];
-	my $tmp_dir="./TmpdirTMHMM/";
+	my $tmp_dir=$tmp_dir_tmhmm;
 	if (!(-d $tmp_dir)){&run_cmd("mkdir $tmp_dir");}
 	&run_cmd("echo '' > $out_file");
 	open my $fa,"<",$in_file;
@@ -225,7 +230,7 @@ sub run_tmhmm{
 		}
 	}
 	close $fa;
-	&run_cmd("echo \"$c_c\" | $path_tmhmm -workdir $tmp_dir $in_file > $out_file","quiet");
+	&run_cmd("echo \"$c_c\" | $path_tmhmm -workdir $tmp_dir > $out_file","quiet");
 	&run_cmd("rm -rf $tmp_dir/*.*");
 }
 
@@ -237,9 +242,9 @@ sub run_signalp{
 	my $final_fasta=$_[3];
 	&run_cmd("echo '' > $out_file");
 	&run_cmd("echo '' > $final_fasta");
-	my $tmp_fasta="Tmp.fasta";
-	my $out_tmp="out_signalp_temp";
-	my $out_tmp_fasta="out_signalp_temp_matured.fasta";
+	my $tmp_fasta=$wdir."Tmp.fasta";
+	my $out_tmp=$wdir."out_signalp_temp";
+	my $out_tmp_fasta=$wdir."out_signalp_temp_matured.fasta";
 	my $batch=1000;
 	my $s1;
 	open $s1,">",$tmp_fasta;
@@ -254,7 +259,7 @@ sub run_signalp{
 				close $s1;
  				&run_cmd("$path_signalp -t $model -m $out_tmp_fasta $tmp_fasta > $out_tmp");
 				&run_cmd("cat $out_tmp >> $out_file");
-				&run_cmd("cat $out_tmp_fasta >> $final_fasta");
+				if (-e $out_tmp_fasta){&run_cmd("cat $out_tmp_fasta >> $final_fasta");}
 				&run_cmd("rm $out_tmp_fasta $out_tmp");
 				open $s1,">",$tmp_fasta;
 				$n=1;
@@ -269,7 +274,7 @@ sub run_signalp{
 	close $s1;
 	&run_cmd("$path_signalp -t $model -m $out_tmp_fasta $tmp_fasta > $out_tmp");
 	&run_cmd("cat $out_tmp >> $out_file");
-	&run_cmd("cat $out_tmp_fasta >> $final_fasta");
+	if (-e $out_tmp_fasta){&run_cmd("cat $out_tmp_fasta >> $final_fasta");}
 	&run_cmd("rm $out_tmp_fasta $out_tmp");
 }
 
