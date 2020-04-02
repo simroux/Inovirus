@@ -7,6 +7,7 @@ This set of script can be used to identify putative inovirus sequences in draft 
 conda create -n inovirus_detector -c bioconda perl-bioperl=1.7.2 blast=2.7.1 hmmer=3.2.1 
 conda install -n inovirus_detector -c r r-randomforest
 ```
+Note: If the "conda create" environment throws an error like "The following packages are not available from current channels", you may have to first create the environment, and then install blast2.7.
 * SignalP and TMHMM, not available through conda.
 Download and install SignalP according to instructions from the SignalP v4.1 authors (http://www.cbs.dtu.dk/services/doc/signalp-4.1.readme)
 Download and install Tmhmm according to instructions from the Tmhmm v2.0 authors (http://www.cbs.dtu.dk/services/doc/tmhmm-2.0c.readme). 
