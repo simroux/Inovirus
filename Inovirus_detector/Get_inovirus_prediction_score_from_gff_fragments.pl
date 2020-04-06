@@ -8,16 +8,22 @@ my $cmd='';
 my $out='';
 my $fa_file='';
 my $gff_file='';
+my $th=0.83; ## Suggested (empirical) threshold
 my $db_dir="Inovirus_db/";
-GetOptions ('help' => \$h, 'h' => \$h, 'i=s'=>\$gff_file, 'f=s'=>\$fa_file, 'd=s'=>\$db_dir);
+my $path_run_predict="run_predict.R";
+my $path_r_model="InovirusModel.RData";
+GetOptions ('help' => \$h, 'h' => \$h, 'i=s'=>\$gff_file, 'f=s'=>\$fa_file, 'd=s'=>\$db_dir, 'prt=s'=>\$path_run_predict, 'prm=s'=>\$path_r_model, 'th=s'=>\$th);
 if ($h==1 || $gff_file eq "" || $fa_file eq ""){ # If asked for help or did not set up any argument
 	print "# Script to get the an Inovirus prediction from contigs / fragments where a putative morphogenesis gene was identified
 #### Recommendation is to take a fragment of ~ +/- 30kb around the putative morphogenesis gene
-#### Arguments : 
+#### Arguments :
 # -i : gff of the fragments to be analyzed
-# -f : nucleotide fasta file of the fragments to be analyzed 
+# -f : nucleotide fasta file of the fragments to be analyzed
 #### Optional arguments
 # -d : path to the Inovirus_db folder (default: Inovirus_db/)
+# -prt : path to the R script 'run_predict.R' (default: run_predict.R)
+# -prm : path to the R model 'InovirusModel.RData' (default: InovirusModel.RData)
+# -th: custom cutoff on model score (default: 0.83, should be between 0 and 1)
 #### Requirements:
 # Blast+
 # R
@@ -27,7 +33,7 @@ if ($h==1 || $gff_file eq "" || $fa_file eq ""){ # If asked for help or did not 
 # PFAM annotation should be indicated as \"pfam=PFAM_domain_name Score\" in the 9th field
 # Inoviridae PC annotation with score should be indicated as \"inoPC=PC_XXX Score\" in the 9th field as well
 # Prediction of coat protein should be indicated as \"Coat_pred=yes/no\" in the 9th field as well
-# Note: the fragment is expected to be a microbial genome fragment, and start with a CDS. 
+# Note: the fragment is expected to be a microbial genome fragment, and start with a CDS.
 # The starting coordinate of the first CDS will thus be used to \"shift\" the coordinate when dealing with the fragment sequence (i.e. transform the genes coordinates from the global genome reference to the fragment reference)
 # if it's not the case, you can indicate in the header line after the fragment id (tab separated) a number of bp to use in this transformation (can be 0 if the fragment is an entire contig)
 #### Fasta format:
@@ -225,7 +231,7 @@ foreach my $frag (sort keys %check_frag){
 								else{
 									print $store_gene{$frag}{$gene}{"pfam"}." is not unexpected\n";
 								}
-							} 
+							}
 							else{
 								$count{"unpfam"}++;
 							}
@@ -254,7 +260,7 @@ foreach my $frag (sort keys %check_frag){
 			my $ratio=0;
 			if ($total_genes>0){$ratio=$count{"unpfam"}/$total_genes;}
 			else{$total_genes=0;}
-			
+
 			my $line=$id_frag.",Unsure,".$length_bp.",".$total_genes.",".$count{"morph"}.",".$count{"pfam_coat"}.",".$count{"pred"}.",".$count{"pc"}.",".$count{"unpfam"}.",".$ratio.",".$tab_size[int($#tab_size/10)].",".$tab_size[int($#tab_size/2)];
 			print $s1 $line."\n";
 			$store_result{$id_frag}{"n_genes"}=$total_genes;
@@ -263,7 +269,7 @@ foreach my $frag (sort keys %check_frag){
 	close $s1;
 	# Now do the prediction
 	my $tmp_output=$wdir."Tmp_output.csv";
-	&run_cmd("Rscript run_predict.R $tmp_input $tmp_output");
+	&run_cmd("Rscript $path_run_predict $tmp_input $tmp_output $path_r_model");
 	# Take the largest window with score > 0.9 (if any)
 	open my $csv,"<",$tmp_output;
 	while(<$csv>){
@@ -273,14 +279,15 @@ foreach my $frag (sort keys %check_frag){
 		if ($tab[1]=~/.*_(\d+)-(\d+)/){$store_result{$tab[1]}{"length"}=$2-$1;}
 		else{next;}
 		$store_result{$tab[1]}{"value"}=$tab[3];
-# 		if ($tab[3]>0.7){ 
+# 		if ($tab[3]>0.7){
 # 			print $tab[1]." -> ".$tab[3]."\n";
 # 		}
 	}
 	close $csv;
 	my %final;
-	my $th=0.83; ## Suggested (empirical) threshold 
+	$final{"max_noth"}=0;
 	foreach my $frag (sort {$store_result{$b}{"n_genes"} <=> $store_result{$a}{"n_genes"}} keys %store_result){
+		if ($final{"max_noth"}<$store_result{$frag}{"value"}){$final{"max_noth"}=$store_result{$frag}{"value"}}
 		if ($store_result{$frag}{"value"}>=$th){
 			if (!defined($final{"max"}) || $store_result{$frag}{"value"}>$final{"max"}{"value"}){
 				$final{"max"}{"value"}=$store_result{$frag}{"value"};
@@ -294,9 +301,10 @@ foreach my $frag (sort keys %check_frag){
 			}
 		}
 	}
-	print "If max proba: ".$final{"max"}{"frag"}.",".$final{"max"}{"n_genes"}.",".$final{"max"}{"value"}."\n";
-	print "If n_genes: ".$final{"n_genes"}{"frag"}.",".$final{"n_genes"}{"n_genes"}.",".$final{"n_genes"}{"value"}."\n";
-	
+	print "Max proba: ".$final{"max_noth"}."\n";
+	print "Final max proba above th of $th: ".$final{"max"}{"frag"}.",".$final{"max"}{"n_genes"}.",".$final{"max"}{"value"}."\n";
+	print "Final n_genes: ".$final{"n_genes"}{"frag"}.",".$final{"n_genes"}{"n_genes"}.",".$final{"n_genes"}{"value"}."\n";
+
 	if ($final{"max"}{"frag"} eq ""){
 		print "## No inovirus prophage/sequence detected in fragment $frag\n";
 	}
@@ -331,13 +339,13 @@ foreach my $frag (sort keys %check_frag){
 			}
 		}
 	# 	print "$n_start_final to $n_stop_final\n";
-		## So we have our final fragment, we print it 
+		## So we have our final fragment, we print it
 		my $type="Prophage";
 		my $start=$store_gene{$frag}{$tab_genes[$n_start_final]}{"start"};
 		my $end=$store_gene{$frag}{$tab_genes[$n_stop_final]}{"stop"};
 		my $frag_length=$end-$start+1;
 		if ($frag_length>0.8*$check_frag{$frag}{"contig_length"} || $nb_genes==$n_gene_frag){
-			$type="Complete"; 
+			$type="Complete";
 			$frag_length=$check_frag{$frag}{"contig_length"};
 			$start=0;
 			$end=$check_frag{$frag}{"contig_length"};
@@ -369,9 +377,9 @@ if ($tag_detection==0){
 print "Now refining these predicted fragments -> looking for att sites for prophages\n";
 
 # Tmp files and global variables
-my $db_tmp="Db_temp.fasta";
-my $query_tmp="Query_temp.fasta";
-my $out_tmp="Blastmp.out";
+my $db_tmp=$wdir."Db_temp.fasta";
+my $query_tmp=$wdir."Query_temp.fasta";
+my $out_tmp=$wdir."Blastmp.out";
 my $th_len=-1;
 my $tag=0;
 
@@ -411,7 +419,7 @@ foreach my $frag (sort keys %info_frag){
 	$required{"start"}=$store_gene{$frag}{$frag}{"start_shifted"};
 	$required{"stop"}=$store_gene{$frag}{$frag}{"stop_shifted"};
 	print "We'll require the gene betwen $required{start} and $required{stop} (pI-like)\n";
-	# 
+	#
 	my $bottom_index=0;
 	my $top_index=-1;
 	my @tab_genes;
@@ -439,7 +447,7 @@ foreach my $frag (sort keys %info_frag){
 		my $mean=($bottom_index+$top_index)/2;
 		for (my $i=$bottom_index-5;$i<=$top_index+5;$i++){
 			if ($i<0 || $i>$#tab_genes){next;}
-# 			print "$i - ".$store_gene{$frag}{$tab_genes[$i]}{"start"}." - ".$store_gene{$frag}{$tab_genes[$i]}{"stop"}." - ".$store_gene{$frag}{$tab_genes[$i]}{"type"}." - ".$store_gene{$frag}{$tab_genes[$i]}{"pfam"}."\n";
+			print "$i - ".$store_gene{$frag}{$tab_genes[$i]}{"start"}." - ".$store_gene{$frag}{$tab_genes[$i]}{"stop"}." - ".$store_gene{$frag}{$tab_genes[$i]}{"type"}." - ".$store_gene{$frag}{$tab_genes[$i]}{"pfam"}."\n";
 			if (defined($tab_genes[$i])){
 				if ($store_gene{$frag}{$tab_genes[$i]}{"type"} eq "tRNA"){
 					$putative_att{$i}{"order"}=abs($mean-$i);
@@ -464,6 +472,7 @@ foreach my $frag (sort keys %info_frag){
 				my @t=sort {$$return{$b}{"id"} <=> $$return{$a}{"id"} || $$return{$b}{"length"} <=> $$return{$a}{"length"}} keys %{$return};
 				print "LOOKING AT tRNA RETURNS\n";
 				foreach my $hit (@t){
+					print $hit."\n";
 					if (!defined($store_att{$frag}{"tRNA"}) || ($store_att{$frag}{"tRNA"}{"id"}<$$return{$hit}{"id"}) || ($store_att{$frag}{"tRNA"}{"id"}==$$return{$hit}{"id"} && $$return{$hit}{"dr_length"} >$store_att{$frag}{"tRNA"}{"length"})){
 						print "Att site in a tRNA - $hit - $$return{$hit}{pot_start}\n";
 						$store_att{$frag}{"tRNA"}{"start"}=$$return{$hit}{"pot_start"};
@@ -474,7 +483,6 @@ foreach my $frag (sort keys %info_frag){
 				}
 			}
 		}
-		
 		# Check CDS
 		print "Now looking at integrase genes\n";
 		# Look if we have integrase
@@ -494,18 +502,18 @@ foreach my $frag (sort keys %info_frag){
 			my $seq="";
 			my $start_e;
 			my $stop_e;
-			if ($sens>0){# integrase is before center, we take the 1000 bp before the start 
+			if ($sens>0){# integrase is before center, we take the 1000 bp before the start
 				$seq=substr($seq_c,$store_gene{$frag}{$gene}{"start_shifted"}-1000,1000);
 				$start_e=$store_gene{$frag}{$gene}{"start_shifted"}-1000;
 				if ($start_e<0){$start_e=0;}
 				$stop_e=$store_gene{$frag}{$gene}{"start_shifted"};
-			} 
+			}
 			else{ # integrase is after center, we take the 1000bp after the stop
 				$seq=substr($seq_c,$store_gene{$frag}{$gene}{"stop_shifted"},1000);
 				$start_e=$store_gene{$frag}{$gene}{"stop_shifted"};
 				$stop_e=$store_gene{$frag}{$gene}{"stop_shifted"}+1000;
 				if ($stop_e>length($seq_c)){$stop_e=$stop_e;}
-			} 
+			}
 			open my $s1,">",$query_tmp;
 			print $s1 ">Query\n$seq\n";
 			close $s1;

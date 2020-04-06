@@ -1,12 +1,18 @@
 # library(glmnet)
 library(randomForest)
 library(methods)
-load(file="InovirusModel.RData") 
 
 args <- commandArgs(trailingOnly=TRUE)
 in_file <- args[1]
 out_file <- args[2]
 # search()
+file_model <- "InovirusModel.RData"
+if (args[3] != ""){
+	file_model <- args[3]
+}
+load(file=file_model) 
+
+
 
 # in_file <- "Tmp_input.csv"
 # out_file <- "Tmp_output.csv"

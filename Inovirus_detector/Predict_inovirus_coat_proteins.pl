@@ -6,17 +6,20 @@ use Cwd;
 my $h='';
 my $cmd='';
 my $out='';
-my $path_signalp='';
-my $path_tmhmm='';
+my $path_signalp='/global/u2/s/simroux/Utils/signalp/signalp-4.1/signalp';
+my $path_signalp5='/global/u2/s/simroux/Utils/signalp/signalp-5.0/signalp-5.0b/';
+my $path_tmhmm='/global/u2/s/simroux/Utils/tmhmm-2.0c/bin/tmhmm';
 my $fa_file='';
 my $wdir='./';
-GetOptions ('help' => \$h, 'h' => \$h, 'f=s'=>\$fa_file, 'sp=s'=>\$path_signalp, 'th=s'=>\$path_tmhmm, 'w=s'=>\$wdir);
-if ($h==1 || $fa_file eq ""  || $path_tmhmm eq "" || $path_signalp eq ""){ # If asked for help or did not set up any argument
+GetOptions ('help' => \$h, 'h' => \$h, 'f=s'=>\$fa_file, 'sp=s'=>\$path_signalp, 'sp5=s'=>\$path_signalp5, 'th=s'=>\$path_tmhmm, 'w=s'=>\$wdir);
+if ($h==1 || $fa_file eq ""  || $path_tmhmm eq "" || ($path_signalp eq "" && $path_signalp5 eq "")){ # If asked for help or did not set up any argument
 	print "# Script to predict putative inovirus coat proteins
-#### Arguments : 
+#### Arguments :
 # -f : fasta file of the proteins to be analyzed
-# -sp : path to signal_p (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?signalp)
 # -th : path to tmhmm (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?tmhmm)
+# -sp : path to signal_p <v4 (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?signalp)
+# or
+# -sp5 : path to signal_p v5 folder (www.cbs.dtu.dk/services/SignalP/portable.php)
 #### Requirements:
 # Tmhmm
 # SignalP
@@ -64,43 +67,77 @@ while(<$txt>){
 }
 close $txt;
 
-print "Generating matured proteins\n";
+my %store_signal;
 my $tmp_matured=$wdir."Tmpmatured.faa";
 my $result_gp=$wdir."out_tmp_signalp_gramp";
 my $matured_gp=$wdir."Tmpmatured_gp.faa";
 my $result_gn=$wdir."out_tmp_signalp_gramn";
 my $matured_gn=$wdir."Tmpmatured_gn.faa";
-print "Running SignalP with gram+ model\n";
-&run_signalp($fa_file,"gram+",$result_gp,$matured_gp);
-my %store_signal;
-open my $tsv,"<",$result_gp;
-my $test=0;
-while(<$tsv>){
-	chomp($_);
-	if ($_ ne ""){$test++;}
-	if ($_=~/^#/){next;}
-	my @tab=split(" ",$_);
-	$store_signal{$tab[0]}{"gp_score"}=$tab[3];
+if ($path_signalp5 eq ""){
+	print "Generating matured proteins\n";
+	print "Running SignalP with gram+ model\n";
+	&run_signalp($fa_file,"gram+",$result_gp,$matured_gp);
+	open my $tsv,"<",$result_gp;
+	my $test=0;
+	while(<$tsv>){
+		chomp($_);
+		if ($_ ne ""){$test++;}
+		if ($_=~/^#/){next;}
+		my @tab=split(" ",$_);
+		$store_signal{$tab[0]}{"gp_score"}=$tab[3];
+	}
+	close $tsv;
+	if ($test<1){
+		die("Pblm with signalp - no result ? \n");
+	}
+	print "Running SignalP with gram- model\n";
+	&run_signalp($fa_file,"gram-",$result_gn,$matured_gn);
+	open my $tsv,"<",$result_gn;
+	$test=0;
+	while(<$tsv>){
+		chomp($_);
+		if ($_ ne ""){$test++;}
+		if ($_=~/^#/){next;}
+		my @tab=split(" ",$_);
+		$store_signal{$tab[0]}{"gn_score"}=$tab[3];
+	}
+	close $tsv;
+	if ($test<1){
+		die("Pblm with signalp - no result for gram - ? \n");
+	}
 }
-close $tsv;
-if ($test<1){
-	die("Pblm with signalp - no result ? \n");
+else{
+	print "Running SignalP5 with gram+ model\n";
+	&run_signalp5($fa_file,"gram+",$result_gp,$matured_gp);
+	my %store_signal;
+	open my $tsv,"<",$result_gp;
+	my $test=0;
+	while(<$tsv>){
+		chomp($_);
+		if ($_ ne ""){$test++;}
+		if ($_=~/^#/){next;}
+		my @tab=split(" ",$_);
+		$store_signal{$tab[0]}{"gp_score"}=$tab[2];
+	}
+	close $tsv;
+	if ($test<1){
+		die("Pblm with signalp - no result ? \n");
+	}
+	print "Running SignalP5 with gram- model\n";
+	if (-e $result_gn){}
+	else{&run_signalp5($fa_file,"gram-",$result_gn,$matured_gn);}
+	open my $tsv,"<",$result_gn;
+	$test=0;
+	while(<$tsv>){
+		chomp($_);
+		if ($_ ne ""){$test++;}
+		if ($_=~/^#/){next;}
+		my @tab=split(" ",$_);
+		$store_signal{$tab[0]}{"gn_score"}=$tab[2];
+	}
+	close $tsv;
 }
-print "Running SignalP with gram- model\n";
-&run_signalp($fa_file,"gram-",$result_gn,$matured_gn);
-open my $tsv,"<",$result_gn;
-$test=0;
-while(<$tsv>){
-	chomp($_);
-	if ($_ ne ""){$test++;}
-	if ($_=~/^#/){next;}
-	my @tab=split(" ",$_);
-	$store_signal{$tab[0]}{"gn_score"}=$tab[3];
-}
-close $tsv;
-if ($test<1){
-	die("Pblm with signalp - no result for gram - ? \n");
-}
+
 my %store_seq;
 my $tag=0;
 open my $s1,">",$tmp_matured;
@@ -110,17 +147,25 @@ while(<$fa>){
 	if ($_=~/^>(.*)/){
 		$tag=0;
 		my $id=$1;
-		if ($id=~/^(\S+).*; MatureChain: (\d+-\d+)/){
-			my $c_c=$1;
-			my $chain=$2;
-			if (!defined($store_signal{$c_c}{"gn_score"}) || $store_signal{$c_c}{"gp_score"}>=$store_signal{$c_c}{"gn_score"}){
-				$tag=1;
-				print $s1 ">".$c_c." gramp,".$chain."\n";
+		if ($path_signalp5 eq ''){
+			if ($id=~/^(\S+).*; MatureChain: (\d+-\d+)/){
+				my $c_c=$1;
+				my $chain=$2;
+				if (!defined($store_signal{$c_c}{"gn_score"}) || $store_signal{$c_c}{"gp_score"}>=$store_signal{$c_c}{"gn_score"}){
+					$tag=1;
+					print $s1 ">".$c_c." gramp,".$chain."\n";
+				}
+			}
+			else{
+				print "# ___ Pblm with $_\n";
+				<STDIN>;
 			}
 		}
 		else{
-			print "# ___ Pblm with $_\n";
-			<STDIN>;
+			if (!defined($store_signal{$id}{"gn_score"}) || $store_signal{$id}{"gp_score"}>=$store_signal{$id}{"gn_score"}){
+				$tag=1;
+				print $s1 ">".$c_c." gramp\n";
+			}
 		}
 	}
 	elsif ($tag==1){
@@ -134,17 +179,25 @@ while(<$fa>){
 	if ($_=~/^>(.*)/){
 		$tag=0;
 		my $id=$1;
-		if ($id=~/^(\S+).*; MatureChain: (\d+-\d+)/){
-			my $c_c=$1;
-			my $chain=$2;
-			if (!defined($store_signal{$c_c}{"gp_score"}) || $store_signal{$c_c}{"gp_score"}<$store_signal{$c_c}{"gn_score"}){
-				$tag=1;
-				print $s1 ">".$c_c." gramn,".$chain."\n";
+		if ($path_signalp5 eq ''){
+			if ($id=~/^(\S+).*; MatureChain: (\d+-\d+)/){
+				my $c_c=$1;
+				my $chain=$2;
+				if (!defined($store_signal{$c_c}{"gp_score"}) || $store_signal{$c_c}{"gp_score"}<$store_signal{$c_c}{"gn_score"}){
+					$tag=1;
+					print $s1 ">".$c_c." gramn,".$chain."\n";
+				}
+			}
+			else{
+				print "# ___ Pblm with $_\n";
+				<STDIN>;
 			}
 		}
 		else{
-			print "# ___ Pblm with $_\n";
-			<STDIN>;
+			if (!defined($store_signal{$id}{"gp_score"}) || $store_signal{$id}{"gp_score"}<=$store_signal{$id}{"gn_score"}){
+				$tag=1;
+				print $s1 ">".$c_c." gramn\n";
+			}
 		}
 	}
 	elsif ($tag==1){
@@ -230,10 +283,29 @@ sub run_tmhmm{
 		}
 	}
 	close $fa;
-	&run_cmd("echo \"$c_c\" | $path_tmhmm -workdir $tmp_dir > $out_file","quiet");
+	&run_cmd("echo \"$c_c\" | $path_tmhmm -workdir $tmp_dir >> $out_file","quiet");
 	&run_cmd("rm -rf $tmp_dir/*.*");
 }
 
+
+
+sub run_signalp5{
+	my $in_file=$_[0];
+	my $model=$_[1];
+	my $out_file=$_[2];
+	my $final_fasta=$_[3];
+	my $cwd = getcwd();
+	$in_file=$cwd."/".$in_file;
+	my $prefix=$cwd."/Tmp";
+	# $final_fasta=$cwd."/".$final_fasta;
+	# $out_file=$cwd."/".$out_file;
+	chdir($path_signalp);
+	&run_cmd("./signalp -format short -mature -org $model -fasta $in_file -prefix $prefix");
+	chdir($cwd)
+	&run_cmd("mv Tmp_summary.signalp5 $out_file");
+	&run_cmd("mv Tmp_mature.fasta $final_fasta");
+	# &run_cmd("mv Tmp_mature.fasta $final_fasta");
+}
 
 sub run_signalp{
 	my $in_file=$_[0];

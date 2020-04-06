@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use autodie;
+use File::Basename;
 use Bio::SeqIO;
 use Getopt::Long;
 use Cwd;
@@ -35,6 +36,8 @@ if ($h==1 || $gb_file eq "" || $path_pfam eq "" || $path_tmhmm eq "" || $path_si
 }
 if (!($db_dir=~/\/$/)){$db_dir.="/";}
 if (!(-d $db_dir)){die("pblm, we did not find the directory Inovirus_db -> $db_dir ?\n");}
+my $dirname = dirname(__FILE__); ## Get the dir from which the script is called, so that we can get the full path of Predict_inovirus_coat_proteins.pl
+# print "dir name: $dirname\n";<STDIN>;
 
 ## Test every program is here
 my $hmm_path=&run_cmd('which hmmsearch','quiet');
@@ -269,7 +272,7 @@ while(my $seq=$io->next_seq){
 		else{print "$out_blast already here\n";}
 		## Do the prediction of coat proteins
 		my $out_coat_pred=$out_file_faa."_inovirus_coat_prediction.csv";
-		if (!(-e $out_coat_pred)){&run_cmd("./Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp $path_signalp -th $path_tmhmm","quiet");}
+		if (!(-e $out_coat_pred)){&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp $path_signalp -th $path_tmhmm","quiet");}
 		else{print "$out_coat_pred already here\n";}
 		if (!(-e $out_coat_pred)){die("Seems like there was a problem with Predict_inovirus_coat_proteins.pl -> we didn't get any output file \n");}
 		## Load all annotation
