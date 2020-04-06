@@ -15,3 +15,8 @@ conda create -n inovirus_classifier -c bioconda blast=2.9.0 prodigal=2.6.3 hmmer
 
 ## Example data
 * The folder "Example_data/" has example input and output files including 3 genomes: 1 Inoviridae, 1 Plectroviridae, and 1 Paulinoviridae.
+* Run as e.g.
+```
+./Run_Ino_classifier.pl -i Example_Data/Input/Input_genomes.fna -d Ino_classifier_db/ -o Example_Data/Output/
+```
+The content of the Example_Data/Output/ should be identical to the files in Example_Data/Expected_Output/
