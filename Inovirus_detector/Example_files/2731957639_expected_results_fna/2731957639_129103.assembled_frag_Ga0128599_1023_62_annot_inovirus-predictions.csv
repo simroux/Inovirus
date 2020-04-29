@@ -1,0 +1,13 @@
+## >Fragment type,Fragment Id_start-stop,final_fragment_length,initial_fragment_length,Prediction_confidence_score
+## Contig,Start,Stop,Start_transformed,Stop_transformed,Strand,Type,Affiliations
+>Prophage,Ga0128599_1023_62_54595-61722,7128,61416,0.9960
+Ga0128599_1023,54595,54951,25361,25717,-,CDS,ID=Ga0128599_1023_54;locus_tag=Ga0128599_1023_54;product=;pfam=NA;inoPC=PC_001 57.1;coat_pred=NA
+Ga0128599_1023,55069,55416,25835,26182,+,CDS,ID=Ga0128599_1023_55;locus_tag=Ga0128599_1023_55;product=;pfam=NA;inoPC=NC_001954.NP_047352.1 50.8;coat_pred=NA
+Ga0128599_1023,55673,56737,26439,27503,+,CDS,ID=Ga0128599_1023_56;locus_tag=Ga0128599_1023_56;product=Putative PF05144.12;pfam=Phage_CRI 54.3;inoPC=NA;coat_pred=NA
+Ga0128599_1023,56737,56976,27503,27742,+,CDS,ID=Ga0128599_1023_57;locus_tag=Ga0128599_1023_57;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1023,57324,57581,28090,28347,+,CDS,ID=Ga0128599_1023_58;locus_tag=Ga0128599_1023_58;product=;pfam=NA;inoPC=NA;coat_pred=Signal
+Ga0128599_1023,57656,57748,28422,28514,+,CDS,ID=Ga0128599_1023_59;locus_tag=Ga0128599_1023_59;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1023,57976,59205,28742,29971,+,CDS,ID=Ga0128599_1023_60;locus_tag=Ga0128599_1023_60;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1023,59202,59525,29968,30291,+,CDS,ID=Ga0128599_1023_61;locus_tag=Ga0128599_1023_61;product=;pfam=NA;inoPC=PC_014 32.8;coat_pred=NA
+Ga0128599_1023,59522,60511,30288,31277,+,CDS,ID=Ga0128599_1023_62;locus_tag=Ga0128599_1023_62;product=Putative PF05707.10;pfam=Zot 67.9;inoPC=PC_006 92.8;coat_pred=NA
+Ga0128599_1023,60508,61722,31274,32488,+,CDS,ID=Ga0128599_1023_63;locus_tag=Ga0128599_1023_63;product=Putative PF00263.19;pfam=Secretin 74.3;inoPC=PC_011 104.7;coat_pred=NA

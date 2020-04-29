@@ -12,16 +12,19 @@ my $original_fna_file='';
 my $path_pfam='';
 my $n_cpu=2;
 my $path_signalp='';
+my $path_signalp5='';
 my $path_tmhmm='';
 my $db_dir="Inovirus_db/";
-GetOptions ('help' => \$h, 'h' => \$h, 'f=s'=>\$original_fna_file, 'p=s'=>\$path_pfam, 'd=s'=>\$db_dir, 't=s'=>\$n_cpu, , 'sp=s'=>\$path_signalp, 'th=s'=>\$path_tmhmm);
-if ($h==1 || $original_fna_file eq "" || $path_pfam eq "" || $path_tmhmm eq "" || $path_signalp eq ""){ # If asked for help or did not set up any argument
+GetOptions ('help' => \$h, 'h' => \$h, 'f=s'=>\$original_fna_file, 'p=s'=>\$path_pfam, 'd=s'=>\$db_dir, 't=s'=>\$n_cpu, 'sp5=s'=>\$path_signalp5 , 'sp=s'=>\$path_signalp, 'th=s'=>\$path_tmhmm);
+if ($h==1 || $original_fna_file eq "" || $path_pfam eq "" || $path_tmhmm eq "" || ($path_signalp eq "" && $path_signalp5 eq "")){ # If asked for help or did not set up any argument
 	print "# Script to predict putative inovirus sequences from a gb file
 #### Arguments :
 # -f : fna file of the contigs to be analyzed
 # -p : path to the pfam database hmm collection, i.e. Pfam-A.hmm (ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz)
-# -sp : path to signal_p (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?signalp)
 # -th : path to tmhmm (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?tmhmm)
+# -sp : path to signal_p <v4 (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?signalp)
+# or
+# -sp5 : path to signal_p v5 folder (www.cbs.dtu.dk/services/SignalP/portable.php)
 #### Optional arguments
 # -d : path to the Inovirus_db folder (default: Inovirus_db/)
 # -t : number of threads used for hmmsearch and blast (default: 2)
@@ -284,7 +287,10 @@ sub process{
 	else{print "$out_blast already here\n";}
 	## Do the prediction of coat proteins
 	my $out_coat_pred=$out_file_faa."_inovirus_coat_prediction.csv";
-	if (!(-e $out_coat_pred)){&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp $path_signalp -th $path_tmhmm","quiet");}
+	if (!(-e $out_coat_pred)){
+		if ($path_signalp5 ne ""){&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp5 $path_signalp5 -th $path_tmhmm","quiet");}
+		else{&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp $path_signalp -th $path_tmhmm","quiet");}
+	}
 	else{print "$out_coat_pred already here\n";}
 	if (!(-e $out_coat_pred)){die("Seems like there was a problem with Predict_inovirus_coat_proteins.pl -> we didn't get any output file \n");}
 	## Do the prediction of tRNA with Infernal

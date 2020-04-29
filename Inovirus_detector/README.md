@@ -1,6 +1,7 @@
 # Inovirus_detector
 This set of script can be used to identify putative inovirus sequences in draft genome assemblies or metagenome assemblies. 
 
+
 ## Requirements
 * Bioperl, blast, hmmer, and randomforest from R, all available through conda
 ```
@@ -24,12 +25,13 @@ wget ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz
 gunzip Pfam-A.hmm.gz
 ```
 
+
 ## Step 1: De novo identification of putative inovirus sequences in a contig set - input: (meta)genome contig(s) in genbank format
-### Input example: 
+### Example with a genbank file as input:
 Example_files/2731957639/2731957639_129103.assembled.gbk
 ```
 source activate inovirus_detector
-./Identify_candidate_fragments_from_gbk.pl -g Example_files/2731957639/2731957639_129103.assembled.gbk -p Pfam-A.hmm
+./Identify_candidate_fragments_from_gbk.pl -g Example_files/2731957639/2731957639_129103.assembled.gbk -p Pfam-A.hmm -sp /path/to/signalp4/signalp -th /path/to/tmhmm
 ```
 ### This first step will
 * Look for pI-like proteins in the genome provided in the genbank file
@@ -53,6 +55,27 @@ export PERL5LIB=$OLD_PERL5LIB
 ```
 ### Note:
 This custom annotation uses tmhmm and signalp to identify putative inovirus coat proteins. The same can be done on individual protein fasta file using the stand-along script "Predict_inovirus_coat_proteins.pl"
+
+### Note: 
+For TMHMM and SignalP 4 (or earlier), the arguments (th and sp) must point to the executable files tmhmm and signalp, respectively
+
+### Alternative using SignalP5
+SignalP 5 can also be used instead of SignalP 4 as follows:
+```
+source activate inovirus_detector
+./Identify_candidate_fragments_from_gbk.pl -g Example_files/2731957639/2731957639_129103.assembled.gbk -p Pfam-A.hmm -sp5 /path/to/signalp5/bin/ -th /path/to/tmhmm
+```
+Note that in this case, the argument "sp5" must point to the bin directory of signalP 5
+
+### Example with a fasta file as input:
+Example_files/2731957639/2731957639_129103.assembled.fna
+```
+./Identify_candidate_fragments_from_fna.pl -f Example_files/2731957639_129103.assembled.fna -p Pfam-A.hmm -th /path/to/tmhmm -sp /path/to/signalp4/signalp
+```
+or
+```
+./Identify_candidate_fragments_from_fna.pl -f Example_files/2731957639_129103.assembled.fna -p Pfam-A.hmm -th /path/to/tmhmm -sp5 /path/to/signalp5/bin
+```
 
 ## Step 2: Refine inovirus genome prediction - input: gff annotation of putative fragments, either from step 1 or from a custom annotation pipeline. 
 ### Example input files: 

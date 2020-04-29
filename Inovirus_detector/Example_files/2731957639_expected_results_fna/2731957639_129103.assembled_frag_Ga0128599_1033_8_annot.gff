@@ -1,0 +1,43 @@
+## Ga0128599_1033_8	2
+Ga0128599_1033	selected_feature	CDS	2	349	.	-	0	ID=Ga0128599_1033_1;locus_tag=Ga0128599_1033_1;product=;pfam=NA;inoPC=NA;coat_pred=Signal
+Ga0128599_1033	selected_feature	CDS	395	934	.	-	0	ID=Ga0128599_1033_2;locus_tag=Ga0128599_1033_2;product=Putative PF11198.6;pfam=DUF2857 78.2;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	949	2664	.	-	0	ID=Ga0128599_1033_3;locus_tag=Ga0128599_1033_3;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	2657	3511	.	-	0	ID=Ga0128599_1033_4;locus_tag=Ga0128599_1033_4;product=Putative PF13614.4;pfam=AAA_31 76.2;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	3734	4069	.	+	0	ID=Ga0128599_1033_5;locus_tag=Ga0128599_1033_5;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	4109	4705	.	+	0	ID=Ga0128599_1033_6;locus_tag=Ga0128599_1033_6;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	5308	5748	.	-	0	ID=Ga0128599_1033_7;locus_tag=Ga0128599_1033_7;product=Putative PF01724.14;pfam=DUF29 150.2;inoPC=PC_048 163.4;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	6259	7359	.	-	0	ID=Ga0128599_1033_8;locus_tag=Ga0128599_1033_8;product=Putative PF05707.10;pfam=Zot 107.4;inoPC=PC_006 195.9;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	7366	7680	.	-	0	ID=Ga0128599_1033_9;locus_tag=Ga0128599_1033_9;product=;pfam=NA;inoPC=PC_027 88.7;coat_pred=Signal
+Ga0128599_1033	selected_feature	CDS	7952	8287	.	-	0	ID=Ga0128599_1033_10;locus_tag=Ga0128599_1033_10;product=;pfam=NA;inoPC=NA;coat_pred=Signal
+Ga0128599_1033	selected_feature	CDS	9150	9284	.	-	0	ID=Ga0128599_1033_11;locus_tag=Ga0128599_1033_11;product=;pfam=NA;inoPC=PC_043 48.2;coat_pred=Perfect
+Ga0128599_1033	selected_feature	CDS	9717	10772	.	-	0	ID=Ga0128599_1033_12;locus_tag=Ga0128599_1033_12;product=Putative PF05144.12;pfam=Phage_CRI 48.6;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	10759	11052	.	-	0	ID=Ga0128599_1033_13;locus_tag=Ga0128599_1033_13;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	11198	11377	.	-	0	ID=Ga0128599_1033_14;locus_tag=Ga0128599_1033_14;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	11377	11682	.	-	0	ID=Ga0128599_1033_15;locus_tag=Ga0128599_1033_15;product=Putative PF02303.15;pfam=Phage_DNA_bind 75.2;inoPC=PC_007 55.3;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	11688	11798	.	-	0	ID=Ga0128599_1033_16;locus_tag=Ga0128599_1033_16;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	11991	12299	.	+	0	ID=Ga0128599_1033_17;locus_tag=Ga0128599_1033_17;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	12640	13182	.	-	0	ID=Ga0128599_1033_18;locus_tag=Ga0128599_1033_18;product=Putative PF01613.16;pfam=Flavin_Reduct 74.4;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	13182	14405	.	-	0	ID=Ga0128599_1033_19;locus_tag=Ga0128599_1033_19;product=Putative PF02353.18;pfam=CMAS 329.2;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	tRNA	14630	14714	.	-	0	ID=tRNA-Leu_1;locus_tag=tRNA-Leu_1;product=tRNA-Leu;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	14822	16261	.	-	0	ID=Ga0128599_1033_20;locus_tag=Ga0128599_1033_20;product=Putative PF01050.16;pfam=MannoseP_isomer 247.6;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	16314	17201	.	-	0	ID=Ga0128599_1033_21;locus_tag=Ga0128599_1033_21;product=Putative PF04321.15;pfam=RmlD_sub_bind 345.6;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	17198	18280	.	-	0	ID=Ga0128599_1033_22;locus_tag=Ga0128599_1033_22;product=Putative PF16363.3;pfam=GDP_Man_Dehyd 320.7;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	18335	19549	.	-	0	ID=Ga0128599_1033_23;locus_tag=Ga0128599_1033_23;product=Putative PF07143.9;pfam=CrtC 166.1;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	19622	22201	.	-	0	ID=Ga0128599_1033_24;locus_tag=Ga0128599_1033_24;product=Putative PF02687.19;pfam=FtsX 104.3;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	22281	22958	.	-	0	ID=Ga0128599_1033_25;locus_tag=Ga0128599_1033_25;product=Putative PF00005.25;pfam=ABC_tran 109.5;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	23219	24052	.	+	0	ID=Ga0128599_1033_26;locus_tag=Ga0128599_1033_26;product=Putative PF00494.17;pfam=SQS_PSY 209.7;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	24049	24882	.	+	0	ID=Ga0128599_1033_27;locus_tag=Ga0128599_1033_27;product=Putative PF00494.17;pfam=SQS_PSY 282.8;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	24887	26227	.	+	0	ID=Ga0128599_1033_28;locus_tag=Ga0128599_1033_28;product=Putative PF01593.22;pfam=Amino_oxidase 95.2;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	26134	26814	.	-	0	ID=Ga0128599_1033_29;locus_tag=Ga0128599_1033_29;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	26820	27605	.	-	0	ID=Ga0128599_1033_30;locus_tag=Ga0128599_1033_30;product=Putative PF03883.12;pfam=H2O2_YaaD 292.4;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	27657	28130	.	-	0	ID=Ga0128599_1033_31;locus_tag=Ga0128599_1033_31;product=;pfam=NA;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	28241	29059	.	-	0	ID=Ga0128599_1033_32;locus_tag=Ga0128599_1033_32;product=Putative PF00588.17;pfam=SpoU_methylase 117.6;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	29059	29655	.	-	0	ID=Ga0128599_1033_33;locus_tag=Ga0128599_1033_33;product=Putative PF01351.16;pfam=RNase_HII 133.5;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	29673	30824	.	-	0	ID=Ga0128599_1033_34;locus_tag=Ga0128599_1033_34;product=Putative PF02684.13;pfam=LpxB 317.0;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	30830	31600	.	-	0	ID=Ga0128599_1033_35;locus_tag=Ga0128599_1033_35;product=Putative PF13720.4;pfam=Acetyltransf_11 94.3;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	31597	32073	.	-	0	ID=Ga0128599_1033_36;locus_tag=Ga0128599_1033_36;product=Putative PF07977.11;pfam=FabA 142.0;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	32070	33074	.	-	0	ID=Ga0128599_1033_37;locus_tag=Ga0128599_1033_37;product=Putative PF00132.22;pfam=Hexapep 104.9;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	33088	33588	.	-	0	ID=Ga0128599_1033_38;locus_tag=Ga0128599_1033_38;product=Putative PF03938.12;pfam=OmpH 132.5;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	33624	35972	.	-	0	ID=Ga0128599_1033_39;locus_tag=Ga0128599_1033_39;product=Putative PF01103.21;pfam=Bac_surface_Ag 255.9;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	35981	37345	.	-	0	ID=Ga0128599_1033_40;locus_tag=Ga0128599_1033_40;product=Putative PF02163.20;pfam=Peptidase_M50 273.9;inoPC=NA;coat_pred=NA
+Ga0128599_1033	selected_feature	CDS	37342	38544	.	-	0	ID=Ga0128599_1033_41;locus_tag=Ga0128599_1033_41;product=Putative PF02670.14;pfam=DXP_reductoisom 156.0;inoPC=NA;coat_pred=NA

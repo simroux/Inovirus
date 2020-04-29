@@ -12,16 +12,19 @@ my $gb_file='';
 my $path_pfam='';
 my $n_cpu=2;
 my $path_signalp='';
+my $path_signalp5='';
 my $path_tmhmm='';
 my $db_dir="Inovirus_db/";
-GetOptions ('help' => \$h, 'h' => \$h, 'g=s'=>\$gb_file, 'p=s'=>\$path_pfam, 'd=s'=>\$db_dir, 't=s'=>\$n_cpu, , 'sp=s'=>\$path_signalp, 'th=s'=>\$path_tmhmm);
-if ($h==1 || $gb_file eq "" || $path_pfam eq "" || $path_tmhmm eq "" || $path_signalp eq ""){ # If asked for help or did not set up any argument
+GetOptions ('help' => \$h, 'h' => \$h, 'g=s'=>\$gb_file, 'p=s'=>\$path_pfam, 'd=s'=>\$db_dir, 't=s'=>\$n_cpu,  'sp5=s'=>\$path_signalp5 , 'sp=s'=>\$path_signalp, 'th=s'=>\$path_tmhmm);
+if ($h==1 || $gb_file eq "" || $path_pfam eq "" || $path_tmhmm eq "" || ($path_signalp eq "" && $path_signalp5 eq "")){ # If asked for help or did not set up any argument
 	print "# Script to predict putative inovirus sequences from a gb file
-#### Arguments : 
+#### Arguments :
 # -g : gb file of the genome to be analyzed
 # -p : path to the pfam database hmm collection, i.e. Pfam-A.hmm (ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz)
-# -sp : path to signal_p (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?signalp)
 # -th : path to tmhmm (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?tmhmm)
+# -sp : path to signal_p <v4 (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?signalp)
+# or
+# -sp5 : path to signal_p v5 folder (www.cbs.dtu.dk/services/SignalP/portable.php)
 #### Optional arguments
 # -d : path to the Inovirus_db folder (default: Inovirus_db/)
 # -t : number of threads used for hmmsearch and blast (default: 2)
@@ -105,10 +108,10 @@ else{
 		else{
 			print "no protein id or locus tag, we are a little lost\n";
 		}
-# 		
+#
 		foreach my $id_prot (keys %seq_prot){
 			$id_prot=~s/\s//g;
-			if ($seq_prot{$id_prot} eq ""){}
+			if ($seq_prot{$id_prot} eq "" || length($seq_prot{$id_prot})<1){}
 			else {
 				print $s1 ">$id_prot\n$seq_prot{$id_prot}\n";
 				print $id_prot."\n";
@@ -129,7 +132,7 @@ else{
 }
 
 print "### Looking for pI-like proteins (inovirus marker gene) - hmmsearch against HMM profiles + blastp against singleton\n";
-### Run Hmmsearch and blast 
+### Run Hmmsearch and blast
 my $out_hmm=$root_gb_file."_vs_Marker_db.tsv";
 my $db_hmm=$db_dir."Final_marker_morph.hmm";
 if (!(-e $out_hmm)){&run_cmd("hmmsearch -o /dev/null --noali --tblout $out_hmm --cpu $n_cpu $db_hmm $fasta_prots");}
@@ -158,7 +161,7 @@ while(<$tsv>){
 			$store{$tab[0]}{"score"}=$tab[5];
 			$store{$tab[0]}{"name"}=join(" ",@tab[18..$#tab]);
 		}
-	}	
+	}
 }
 close $tsv;
 print "Reading $out_blast ... \n";
@@ -225,7 +228,7 @@ while(my $seq=$io->next_seq){
 		%seq_type = (%seq_type, map { $_->get_tag_values('locus_tag') , $_->primary_tag} @RNA_features);
 		%seq_product = (%seq_product, map { if ($_->has_tag('product')){$_->get_tag_values('locus_tag') , $_->get_tag_values('product')} else {$_->get_tag_values('locus_tag'), ""} } @RNA_features);
 	}
-	
+
 	foreach my $cand (keys %{$check_prot{$seq->id}}){
 		my $b_s=$seq_start{$cand}-30000;
 		if ($b_s<0){$b_s=0;}
@@ -246,7 +249,9 @@ while(my $seq=$io->next_seq){
 				if (($seq_start{$prot}>=$b_s && $seq_start{$prot}<=$b_e) || ($seq_end{$prot}>=$b_s && $seq_end{$prot}<=$b_e)){
 					push(@tab_selected,$prot);
 					print "\t\t We include feature $prot - $seq_type{$prot} - $seq_start{$prot} - $seq_end{$prot} - $real_start / $real_end\n";
-					print $s2 ">".$prot."\n".$seq_prot{$prot}."\n";
+					if (length($seq_prot{$prot})>1){ ## do not include tRNA and other features without protein sequence in the faa file, otherwise SignalP complains
+						print $s2 ">".$prot."\n".$seq_prot{$prot}."\n";
+					}
 					if ($real_start==-1){$real_start=$seq_start{$prot};}
 					if ($seq_end{$prot}>$real_end){$real_end=$seq_end{$prot};}
 				}
@@ -272,7 +277,10 @@ while(my $seq=$io->next_seq){
 		else{print "$out_blast already here\n";}
 		## Do the prediction of coat proteins
 		my $out_coat_pred=$out_file_faa."_inovirus_coat_prediction.csv";
-		if (!(-e $out_coat_pred)){&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp $path_signalp -th $path_tmhmm","quiet");}
+		if (!(-e $out_coat_pred)){
+			if ($path_signalp5 ne ""){&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp5 $path_signalp5 -th $path_tmhmm","quiet");}
+			else{&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp $path_signalp -th $path_tmhmm","quiet");}
+		}
 		else{print "$out_coat_pred already here\n";}
 		if (!(-e $out_coat_pred)){die("Seems like there was a problem with Predict_inovirus_coat_proteins.pl -> we didn't get any output file \n");}
 		## Load all annotation
@@ -293,7 +301,7 @@ while(my $seq=$io->next_seq){
 			}
 		}
 		close $tsv;
-		
+
 		print "Reading $out_hmm ... \n";
 		open my $tsv,"<",$out_hmm;
 		while(<$tsv>){
@@ -310,8 +318,8 @@ while(my $seq=$io->next_seq){
 			}
 		}
 		close $tsv;
-		
-		
+
+
 		print "Reading $out_blast ... \n";
 		open my $tsv,"<",$out_blast;
 		while(<$tsv>){
@@ -326,7 +334,7 @@ while(my $seq=$io->next_seq){
 			}
 		}
 		close $tsv;
-		
+
 		print "Reading $out_coat_pred .. \n";
 		open my $csv,"<",$out_coat_pred;
 		while(<$csv>){

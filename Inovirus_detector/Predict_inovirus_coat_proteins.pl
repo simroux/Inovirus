@@ -299,7 +299,7 @@ sub run_signalp5{
 	my $prefix=$cwd."/Tmp";
 	# $final_fasta=$cwd."/".$final_fasta;
 	# $out_file=$cwd."/".$out_file;
-	chdir($path_signalp);
+	chdir($path_signalp5);
 	&run_cmd("./signalp -format short -mature -org $model -fasta $in_file -prefix $prefix");
 	chdir($cwd)
 	&run_cmd("mv Tmp_summary.signalp5 $out_file");
