@@ -104,7 +104,7 @@ If your input is a fasta file of one or more contigs, and you would like to run 
 
 You can also change the default minimum score cutoff (0.83), using the "min_score" option:
 ```
-./Wrapper_Inovirus_detection_fasta.pl -f Example_files/2731957639/2731957639_129103.assembled.fna -p Pfam-A.hmm -th /path/to/tmhmm -sp /path/to/signalp4/signalp-min_score 0.5
+./Wrapper_Inovirus_detection_fasta.pl -f Example_files/2731957639/2731957639_129103.assembled.fna -p Pfam-A.hmm -th /path/to/tmhmm -sp /path/to/signalp4/signalp -min_score 0.5
 ```
 
 ### Note about "Detection type" feature:
