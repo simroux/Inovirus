@@ -5,7 +5,7 @@ This set of script can be used to identify putative inovirus sequences in draft 
 ## Requirements
 * Bioperl, blast, hmmer, and randomforest from R, all available through conda
 ```
-conda create -n inovirus_detector -c bioconda perl-bioperl=1.7.2 blast=2.7.1 hmmer=3.2.1
+conda create -n inovirus_detector -c bioconda perl-bioperl blast hmmer prodigal aragorn
 conda install -n inovirus_detector -c r r-randomforest prodigal
 ```
 Note: If the "conda create" environment throws an error like "The following packages are not available from current channels", you may have to first create the environment, and then install blast2.7.
