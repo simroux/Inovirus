@@ -58,6 +58,9 @@ if ($blastp_path eq ""){die("pblm, we did not find the blastp path - $blastp_pat
 $original_fna_file=~/(.*)\.f[^\.]*$/;
 my $root_fna_file=$1;
 if ($root_fna_file eq ""){die("Pblm with format file name $original_fna_file\n");}
+my $wdir="./";
+if ($root_fna_file=~/(.*\/)[^\/]+/){$wdir=$1;}
+print "Wdir: ".$wdir."\n";
 
 ## Clean sequence names
 my $fna_file=$root_fna_file."_clean.fna";
@@ -288,8 +291,8 @@ sub process{
 	## Do the prediction of coat proteins
 	my $out_coat_pred=$out_file_faa."_inovirus_coat_prediction.csv";
 	if (!(-e $out_coat_pred)){
-		if ($path_signalp5 ne ""){&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp5 $path_signalp5 -th $path_tmhmm","quiet");}
-		else{&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp $path_signalp -th $path_tmhmm","quiet");}
+		if ($path_signalp5 ne ""){&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp5 $path_signalp5 -th $path_tmhmm -w $wdir","quiet");}
+		else{&run_cmd($dirname."/Predict_inovirus_coat_proteins.pl -f $out_file_faa -sp $path_signalp -th $path_tmhmm -w $wdir","quiet");}
 	}
 	else{print "$out_coat_pred already here\n";}
 	if (!(-e $out_coat_pred)){die("Seems like there was a problem with Predict_inovirus_coat_proteins.pl -> we didn't get any output file \n");}

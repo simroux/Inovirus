@@ -60,6 +60,8 @@ my $final_out=$basename."_inovirus-predictions.csv";
 my $final_out_2=$basename."_inovirus-predictions-refined.csv";
 my $wdir="./";
 if ($basename=~/(.*\/)[^\/]+/){$wdir=$1;}
+print "Wdir: ".$wdir."\n";
+
 
 my %expected;
 open my $tsv,"<",$expected_pfam_list;
