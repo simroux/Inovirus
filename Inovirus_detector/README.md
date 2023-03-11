@@ -99,12 +99,12 @@ and 2732535622_129103.assembled_frag_Ga0128599_10338_annot_inovirus-predictions-
 ## New addition: Wrapper script for input fasta file
 If your input is a fasta file of one or more contigs, and you would like to run the entire inovirus detection pipeline, you can do it as follows:
 ```
-./Wrapper_Inovirus_detection_fasta.pl -f Example_files/2731957639_129103.assembled.fna -p Pfam-A.hmm -th /path/to/tmhmm -sp /path/to/signalp4/signalp
+./Wrapper_Inovirus_detection_fasta.pl -f Example_files/2731957639/2731957639_129103.assembled.fna -p Pfam-A.hmm -th /path/to/tmhmm -sp /path/to/signalp4/signalp
 ```
 
 You can also change the default minimum score cutoff (0.83), using the "min_score" option:
 ```
-./Wrapper_Inovirus_detection_fasta.pl -f Example_files/2731957639_129103.assembled.fna -p Pfam-A.hmm -th /path/to/tmhmm -sp /path/to/signalp4/signalp-min_score 0.5
+./Wrapper_Inovirus_detection_fasta.pl -f Example_files/2731957639/2731957639_129103.assembled.fna -p Pfam-A.hmm -th /path/to/tmhmm -sp /path/to/signalp4/signalp-min_score 0.5
 ```
 
 ### Note about "Detection type" feature:
