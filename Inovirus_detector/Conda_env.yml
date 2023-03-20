@@ -1,0 +1,9 @@
+name: Inovirus_detector
+channels:
+  - defaults
+dependencies:
+  - prodigal
+  - hmmer
+  - blast
+  - aragorn
+  - perl-bioperl
